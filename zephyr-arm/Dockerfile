@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # set noninteractive installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -31,8 +31,13 @@ RUN wget -q https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZE
 # tell cmake where to find the Zephyr SDK cmake packages
 ENV CMAKE_PREFIX_PATH=/opt/toolchains
 
+RUN pwd
+
 # create a Python virtual environment and install Python packages
-RUN python3 -m venv .venv \
-  && .venv/bin/activate \
-  && pip install --no-cache-dir \
+RUN python3 -m venv /.venv \
+  && /.venv/bin/pip install --no-cache-dir \
     west protobuf grpcio-tools
+
+# Automatically activate the virtual environment
+ENV VIRTUAL_ENV=/.venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
