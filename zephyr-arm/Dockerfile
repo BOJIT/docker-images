@@ -34,8 +34,7 @@ RUN wget -q https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZE
 
 # Create python virtual environment
 RUN python3 -m venv /.venv \
-&& /.venv/bin/pip install --no-cache-dir \
-west protobuf grpcio-tools
+&& /.venv/bin/pip install --no-cache-dir west
 
 # Set environment variables
 ENV CMAKE_PREFIX_PATH=/opt/toolchains
