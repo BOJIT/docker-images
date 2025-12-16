@@ -29,15 +29,10 @@ RUN wget -q https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZE
   && rm zephyr-sdk-${ZEPHYR_SDK_VERSION}_linux-x86_64_minimal.tar.xz
 
 # tell cmake where to find the Zephyr SDK cmake packages
-ENV CMAKE_PREFIX_PATH /opt/toolchains
+ENV CMAKE_PREFIX_PATH=/opt/toolchains
 
 # create a Python virtual environment and install Python packages
 RUN python3 -m venv /venv \
   && . /venv/bin/activate \
   && pip install --no-cache-dir \
     west protobuf grpcio-tools
-
-# install Python dependencies for the Zephyr workspace
-RUN . /venv/bin/activate \
-  && cd /zephyr-workspace-cache \
-  && pip install --no-cache-dir -r zephyr/scripts/requirements.txt
