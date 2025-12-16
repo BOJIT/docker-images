@@ -1,26 +1,30 @@
 FROM ubuntu:24.04
 
-# set noninteractive installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# install host packages for Zephyr builds. package list is from here:
-# https://docs.zephyrproject.org/3.5.0/develop/getting_started/index.html#install-dependencies
+# Core dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  ccache \
-  cmake \
-  file \
-  g++-multilib \
-  gcc \
-  gcc-multilib \
-  git \
-  gperf \
-  make \
-  ninja-build \
-  python3-venv \
-  wget \
-  xz-utils
+    ccache \
+    cmake \
+    device-tree-compiler \
+    dfu-util \
+    file \
+    gcc \
+    gcc-multilib \
+    g++-multilib \
+    git \
+    gperf \
+    libsdl2-dev \
+    libmagic1
+    make \
+    ninja-build \
+    python3-dev \
+    python3-venv \
+    python3-tk \
+    wget \
+    xz-utils \
 
-# install the Zephyr toolchain only for arm-zephyr-eabi
+# Install the Zephyr toolchain only for arm-zephyr-eabi
 ARG ZEPHYR_SDK_VERSION=0.17.4
 RUN wget -q https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZEPHYR_SDK_VERSION}/zephyr-sdk-${ZEPHYR_SDK_VERSION}_linux-x86_64_minimal.tar.xz \
   && mkdir -p /opt/toolchains \
@@ -28,16 +32,12 @@ RUN wget -q https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZE
   && /opt/toolchains/zephyr-sdk-${ZEPHYR_SDK_VERSION}/setup.sh -c -t arm-zephyr-eabi \
   && rm zephyr-sdk-${ZEPHYR_SDK_VERSION}_linux-x86_64_minimal.tar.xz
 
-# tell cmake where to find the Zephyr SDK cmake packages
-ENV CMAKE_PREFIX_PATH=/opt/toolchains
-
-RUN pwd
-
-# create a Python virtual environment and install Python packages
+# Create python virtual environment
 RUN python3 -m venv /.venv \
-  && /.venv/bin/pip install --no-cache-dir \
-    west protobuf grpcio-tools
+&& /.venv/bin/pip install --no-cache-dir \
+west protobuf grpcio-tools
 
-# Automatically activate the virtual environment
+# Set environment variables
+ENV CMAKE_PREFIX_PATH=/opt/toolchains
 ENV VIRTUAL_ENV=/.venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
