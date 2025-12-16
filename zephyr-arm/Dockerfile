@@ -15,14 +15,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     gperf \
     libsdl2-dev \
-    libmagic1
+    libmagic1 \
     make \
     ninja-build \
     python3-dev \
     python3-venv \
     python3-tk \
     wget \
-    xz-utils \
+    xz-utils
 
 # Install the Zephyr toolchain only for arm-zephyr-eabi
 ARG ZEPHYR_SDK_VERSION=0.17.4
